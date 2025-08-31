@@ -415,36 +415,75 @@ export async function loadNotes() {
 function showNote(index, data) {
     const notesDiv = document.getElementById("notesContent");
     const dots = document.querySelectorAll(".dot");
+    const nextBtn = document.getElementById("nextNote");
+    const prevBtn = document.getElementById("prevNote");
 
     currentIndex = index;
     notesDiv.innerHTML = "";
+    let noteKey = `notes${index}`;
+    let noteParagraphs = data[noteKey] || [];
 
-    const noteKey = `notes${index}`;
-    const noteParagraphs = data[noteKey] || [];
+    // Disable buttons at start & dim them
+    if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = 0.4;
+        nextBtn.style.cursor = "not-allowed";
+    }
+    if (prevBtn) {
+        prevBtn.disabled = true;
+        prevBtn.style.opacity = 0.4;
+        prevBtn.style.cursor = "not-allowed";
+    }
 
-    let cumulativeDelay = 0; // keep track of total delay so far
+    let currentParaIndex = 0;
 
-    noteParagraphs.forEach((para) => {
+    function showNextPara() {
+        if (currentParaIndex >= noteParagraphs.length) return;
+
+        const para = noteParagraphs[currentParaIndex];
         const p = document.createElement("p");
         p.textContent = para;
         p.style.opacity = 0;
         notesDiv.appendChild(p);
 
-        // Compute delay based on length: e.g., 50ms per character + 500ms base
-        const delayForThisPara = para.length * 50 + 300;
+        p.style.transition = "opacity 0.8s ease";
+        setTimeout(() => p.style.opacity = 1, 50);
 
-        setTimeout(() => {
-            p.style.transition = "opacity 0.8s ease";
-            p.style.opacity = 1;
-        }, cumulativeDelay);
+        currentParaIndex++;
 
-        cumulativeDelay += delayForThisPara; // add for next paragraph
-    });
+        // Enable next button if all paragraphs shown
+        if (currentParaIndex === noteParagraphs.length) {
+            if (nextBtn) {
+                nextBtn.disabled = (currentIndex >= (data.totalNotes || 0)) ? true : false;
+                nextBtn.style.opacity = (nextBtn.disabled) ? 0.4 : 1;
+                nextBtn.style.cursor = (nextBtn.disabled) ? "not-allowed" : "pointer";
+            }
+            if (prevBtn) {
+                prevBtn.disabled = (currentIndex <= 1) ? true : false;
+                prevBtn.style.opacity = (prevBtn.disabled) ? 0.4 : 1;
+                prevBtn.style.cursor = (prevBtn.disabled) ? "not-allowed" : "pointer";
+            }
+        } else {
+            // schedule next paragraph based on length
+            const delay = para.length * 50 + 300;
+            timeoutHandle = setTimeout(showNextPara, delay);
+        }
+    }
+
+    // Start showing first paragraph
+    let timeoutHandle = setTimeout(showNextPara, 0);
+
+    // Tap/click to show next paragraph immediately
+    notesDiv.onclick = () => {
+        clearTimeout(timeoutHandle); // cancel scheduled
+        showNextPara();
+    };
 
     // Update dots
     dots.forEach(dot => dot.classList.remove("active"));
     if (dots[index - 1]) dots[index - 1].classList.add("active");
 }
+
 
 
 
