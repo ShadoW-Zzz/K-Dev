@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <h2>🔐 Secure Access</h2>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Enter access code">
+      </div>
+      <button class="submit-btn" onclick="checkPassword()">
+        <span>Authenticate</span>
+      </button>
+      <div id="message"></div>
+      <ul id="hintsList" class="hint"></ul>
+    </div>
+  </div>
+  <div id="result"></div>
+
+  <!-- Firebase SDKs (v10 modular) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js"></script>
+
+  <!-- Firebase Config -->
+  <script type="module" src="firebase.js"></script>
+
+  <!-- App Logic -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
