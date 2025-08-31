@@ -33,7 +33,7 @@
     }
 
     .birthday-title {
-      font-size: clamp(3rem, 10vw, 8rem);
+      font-size: clamp(2.5rem, 8vw, 8rem);
       font-weight: 900;
       letter-spacing: -2px;
       text-transform: uppercase;
@@ -59,8 +59,8 @@
     }
 
     .cake-clickable {
-      font-size: clamp(5rem, 12vw, 10rem);
-      margin: 50px 0;
+      font-size: clamp(4rem, 10vw, 10rem);
+      margin: 40px 0;
       cursor: pointer;
       transition: all 0.3s ease;
       animation: cakeFloat 4s ease-in-out infinite;
@@ -79,7 +79,7 @@
     }
 
     .cake-hint {
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       color: rgba(255, 255, 255, 0.6);
       margin-top: 10px;
       font-style: italic;
@@ -92,51 +92,51 @@
       to { opacity: 1; }
     }
 
-    /* Side decorative elements - slanted */
+    /* Side decorative elements - mobile optimized */
     .side-element {
       position: absolute;
-      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-size: clamp(1.2rem, 3vw, 3rem);
       opacity: 0.6;
       animation: sideFloat 6s ease-in-out infinite;
     }
 
     .side-element.left {
-      left: 5%;
+      left: 2%;
       transform: rotate(-15deg);
     }
 
     .side-element.right {
-      right: 5%;
+      right: 2%;
       transform: rotate(15deg);
     }
 
     .side-element:nth-child(1) {
-      top: 15%;
+      top: 10%;
       animation-delay: 0s;
     }
 
     .side-element:nth-child(2) {
-      top: 25%;
+      top: 20%;
       animation-delay: 1s;
     }
 
     .side-element:nth-child(3) {
-      top: 35%;
+      top: 30%;
       animation-delay: 2s;
     }
 
     .side-element:nth-child(4) {
-      bottom: 35%;
+      bottom: 30%;
       animation-delay: 3s;
     }
 
     .side-element:nth-child(5) {
-      bottom: 25%;
+      bottom: 20%;
       animation-delay: 4s;
     }
 
     .side-element:nth-child(6) {
-      bottom: 15%;
+      bottom: 10%;
       animation-delay: 5s;
     }
 
@@ -152,11 +152,11 @@
     }
 
     .notes-btn {
-      padding: 18px 35px;
+      padding: 16px 30px;
       background: transparent;
       color: #ffffff;
       border: 3px solid #ffffff;
-      font-size: 16px;
+      font-size: clamp(14px, 2.5vw, 16px);
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -168,7 +168,7 @@
       animation: buttonSlide 1s ease-out 4s forwards;
       text-decoration: none;
       display: inline-block;
-      margin-top: 60px;
+      margin-top: 40px;
     }
 
     @keyframes buttonSlide {
@@ -212,14 +212,14 @@
       transform: translateY(-3px);
     }
 
-    /* Photo modal */
+    /* Photo modal - mobile optimized */
     .photo-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -228,6 +228,7 @@
       visibility: hidden;
       transition: all 0.4s ease;
       backdrop-filter: blur(10px);
+      padding: 10px;
     }
 
     .photo-modal.show {
@@ -237,13 +238,14 @@
 
     .photo-container {
       background: #ffffff;
-      padding: 30px;
-      border: 4px solid #000000;
-      max-width: 90%;
-      max-height: 90%;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 95%;
+      max-height: 95%;
       position: relative;
       transform: scale(0.8);
       transition: transform 0.4s ease;
+      box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
     }
 
     .photo-modal.show .photo-container {
@@ -251,67 +253,75 @@
     }
 
     .photo-placeholder {
-      width: 400px;
-      height: 300px;
-      background: #f0f0f0;
-      border: 2px solid #000000;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      min-height: 300px;
+      background: #f8f9fa;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #666;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      overflow: hidden;
     }
 
     .photo-caption {
       text-align: center;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
       color: #000000;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .close-btn {
       position: absolute;
-      top: 10px;
-      right: 15px;
-      background: none;
+      top: 15px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.1);
       border: none;
-      font-size: 24px;
+      font-size: 28px;
       color: #000000;
       cursor: pointer;
       font-weight: bold;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
     }
 
-    .upload-btn {
-      background: #000000;
-      color: #ffffff;
-      border: 2px solid #000000;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
+    .close-btn:hover {
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    .upload-btn:hover {
-      background: #ffffff;
-      color: #000000;
-    }
-
-    /* Mobile responsiveness */
+    /* Mobile specific styles */
     @media (max-width: 768px) {
       .side-element {
-        font-size: 2rem;
-      }
-      
-      .photo-placeholder {
-        width: 300px;
-        height: 225px;
+        font-size: clamp(1rem, 3vw, 2rem);
       }
       
       .photo-container {
-        padding: 20px;
-        margin: 20px;
+        padding: 15px;
+        margin: 5px;
+        max-width: 98%;
+        max-height: 98%;
+      }
+      
+      .photo-placeholder {
+        min-height: 250px;
+      }
+      
+      .close-btn {
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        width: 35px;
+        height: 35px;
       }
     }
 
@@ -320,14 +330,49 @@
         font-size: 1.5rem;
       }
       
+      .side-element.left {
+        left: 1%;
+      }
+      
+      .side-element.right {
+        right: 1%;
+      }
+      
       .photo-placeholder {
-        width: 250px;
-        height: 190px;
+        min-height: 200px;
+        font-size: 1rem;
       }
       
       .notes-btn {
-        padding: 16px 30px;
+        padding: 14px 25px;
         font-size: 14px;
+        margin-top: 30px;
+      }
+      
+      .photo-container {
+        padding: 12px;
+      }
+      
+      .close-btn {
+        font-size: 22px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 320px) {
+      .birthday-title {
+        font-size: 2rem;
+      }
+      
+      .cake-clickable {
+        font-size: 3.5rem;
+        margin: 30px 0;
+      }
+      
+      .photo-placeholder {
+        min-height: 180px;
       }
     }
   </style>
@@ -360,10 +405,6 @@
         <p>🖼️ Your special photo will appear here!</p>
       </div>
       <p class="photo-caption">A memory worth celebrating! 📸</p>
-      <!-- <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="displayPhoto(event)">
-      <button class="upload-btn" onclick="document.getElementById('photoInput').click()">
-        Choose Photo 📷
-      </button> -->
     </div>
   </div>
 
@@ -379,18 +420,6 @@
     function closePhotoModal() {
       document.getElementById('photoModal').classList.remove('show');
     }
-
-    // function displayPhoto(event) {
-    //   const file = event.target.files[0];
-    //   if (file) {
-    //     const reader = new FileReader();
-    //     reader.onload = function(e) {
-    //       const photoDisplay = document.getElementById('photoDisplay');
-    //       photoDisplay.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid #000;">`;
-    //     };
-    //     reader.readAsDataURL(file);
-    //   }
-    // }
 
     // Close modal when clicking outside
     document.getElementById('photoModal').addEventListener('click', function(e) {

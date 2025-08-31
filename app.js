@@ -106,48 +106,25 @@ function showResult(message, type) {
 
 // Add enter key support
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("password").addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            checkPassword();
-        }
-    });
-    
-    // Add input animation
-    document.getElementById("password").addEventListener("input", function() {
-        this.style.transform = "scale(1.02)";
-        setTimeout(() => {
-            this.style.transform = "scale(1)";
-        }, 150);
-    });
+    const passwordInput = document.getElementById("password");
+    if (passwordInput) {
+        passwordInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+        
+        // Add input animation
+        passwordInput.addEventListener("input", function() {
+            this.style.transform = "scale(1.02)";
+            setTimeout(() => {
+                this.style.transform = "scale(1)";
+            }, 150);
+        });
+    }
 });
 
-
-// async function loadPhoto() {
-//     const docRef = doc(db, "secrets", "photos");
-//     const docSnap = await getDoc(docRef);
-  
-//     if (docSnap.exists()) {
-//       const data = docSnap.data();
-//       // we are storing only the fileId in Firestore
-//       const fileId = data.dev2;
-  
-//       // construct the proper Google Drive link
-//       const photoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-  
-//       console.log("Photo URL:", photoUrl);
-  
-//       const photoDisplay = document.getElementById('photoDisplay');
-//       photoDisplay.innerHTML = `
-//         <img src="${photoUrl}" 
-//              alt="Loaded Image"
-//              style="max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid #000;" />
-//       `;
-//     } else {
-//       console.log("No such document!");
-//     }
-//   }
-
-  async function loadPhoto() {
+async function loadPhoto() {
     try {
         const docRef = doc(db, "secrets", "photos");
         const docSnap = await getDoc(docRef);
@@ -158,24 +135,24 @@ document.addEventListener("DOMContentLoaded", function() {
             
             console.log("Retrieved fileId:", fileId);
             
-            // Try multiple Google Drive URL formats
+            // Use the working Google Drive thumbnail format first
             const photoUrls = [
-                `https://drive.google.com/uc?export=view&id=${fileId}`,
                 `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
-                `https://lh3.googleusercontent.com/d/${fileId}=w1000`
+                `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
+                `https://drive.google.com/uc?export=view&id=${fileId}`
             ];
             
             const photoDisplay = document.getElementById('photoDisplay');
             
             // Show loading state
             photoDisplay.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px;">
                     <div style="font-size: 2rem; margin-bottom: 10px;">📷</div>
-                    <p>Loading your special photo...</p>
+                    <p style="color: #666;">Loading your special photo...</p>
                 </div>
             `;
             
-            // Try to load the image with the first URL
+            // Try to load the image with the first URL (thumbnail format)
             await tryLoadImage(photoUrls[0], fileId, photoDisplay);
             
         } else {
@@ -194,10 +171,19 @@ async function tryLoadImage(photoUrl, fileId, photoDisplay) {
         
         img.onload = function() {
             console.log("Image loaded successfully!");
+            
+            // Mobile-friendly image display without borders
             photoDisplay.innerHTML = `
                 <img src="${photoUrl}" 
                      alt="Special Birthday Memory"
-                     style="max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid #000;" />
+                     style="
+                        width: 100%; 
+                        height: auto; 
+                        max-height: 70vh; 
+                        object-fit: contain; 
+                        border-radius: 8px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                     " />
             `;
             resolve();
         };
@@ -213,7 +199,7 @@ async function tryLoadImage(photoUrl, fileId, photoDisplay) {
                 console.log("Image loading timeout, trying alternatives...");
                 tryAlternativeUrls(fileId, photoDisplay);
             }
-        }, 10000); // 10 second timeout
+        }, 8000); // 8 second timeout (reduced for mobile)
         
         img.src = photoUrl;
     });
@@ -221,9 +207,9 @@ async function tryLoadImage(photoUrl, fileId, photoDisplay) {
 
 async function tryAlternativeUrls(fileId, photoDisplay) {
     const alternativeUrls = [
-        `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
         `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
-        `https://drive.google.com/file/d/${fileId}/view`
+        `https://drive.google.com/uc?export=view&id=${fileId}`,
+        `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`
     ];
     
     for (let i = 0; i < alternativeUrls.length; i++) {
@@ -236,7 +222,14 @@ async function tryAlternativeUrls(fileId, photoDisplay) {
                 photoDisplay.innerHTML = `
                     <img src="${url}" 
                          alt="Special Birthday Memory"
-                         style="max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid #000;" />
+                         style="
+                            width: 100%; 
+                            height: auto; 
+                            max-height: 70vh; 
+                            object-fit: contain; 
+                            border-radius: 8px;
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                         " />
                 `;
                 return;
             }
@@ -254,7 +247,7 @@ function testImageUrl(url) {
         const img = new Image();
         const timeout = setTimeout(() => {
             resolve(false);
-        }, 5000);
+        }, 4000); // Reduced timeout for mobile
         
         img.onload = () => {
             clearTimeout(timeout);
@@ -273,17 +266,21 @@ function testImageUrl(url) {
 function showGoogleDriveInstructions(fileId, photoDisplay) {
     photoDisplay.innerHTML = `
         <div style="padding: 20px; text-align: center; color: #333;">
-            <div style="font-size: 3rem; margin-bottom: 15px;">🔐</div>
-            <h3 style="margin-bottom: 15px;">Photo Access Issue</h3>
-            <p style="margin-bottom: 10px;">To fix this, make sure the Google Drive file is:</p>
-            <ol style="text-align: left; margin: 15px 0; padding-left: 20px;">
-                <li><strong>Publicly accessible</strong> (Anyone with the link can view)</li>
-                <li><strong>Not restricted</strong> to specific Google accounts</li>
-            </ol>
-            <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
-                File ID: ${fileId}
-            </p>
-            <button onclick="retryPhotoLoad()" style="margin-top: 15px; padding: 8px 16px; background: #007bff; color: white; border: none; cursor: pointer;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">🔐</div>
+            <h3 style="margin-bottom: 15px; font-size: 1.2rem;">Photo Access Issue</h3>
+            <p style="margin-bottom: 15px; font-size: 0.9rem;">Make sure the Google Drive file is publicly accessible</p>
+            <button onclick="retryPhotoLoad()" style="
+                margin-top: 15px; 
+                padding: 12px 20px; 
+                background: #007bff; 
+                color: white; 
+                border: none; 
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                font-weight: 600;
+                transition: background 0.3s ease;
+            " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
                 🔄 Try Again
             </button>
         </div>
@@ -294,9 +291,17 @@ function showError(message) {
     const photoDisplay = document.getElementById('photoDisplay');
     if (photoDisplay) {
         photoDisplay.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #ff6b6b;">
+            <div style="
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                height: 100%; 
+                color: #ff6b6b;
+                padding: 20px;
+            ">
                 <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
-                <p>${message}</p>
+                <p style="font-size: 0.9rem; text-align: center;">${message}</p>
             </div>
         `;
     }
@@ -312,9 +317,9 @@ function debugPhotoAccess(fileId) {
     console.log("File ID:", fileId);
     
     const testUrls = [
-        `https://drive.google.com/uc?export=view&id=${fileId}`,
         `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
         `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
+        `https://drive.google.com/uc?export=view&id=${fileId}`,
         `https://drive.google.com/file/d/${fileId}/view`
     ];
     
@@ -323,7 +328,6 @@ function debugPhotoAccess(fileId) {
         // You can manually test these URLs in your browser
     });
 }
-  
 
 // Make function globally available
 window.checkPassword = checkPassword;
