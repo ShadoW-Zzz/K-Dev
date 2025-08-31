@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎉 Happy Birthday! 🎉</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .main-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .birthday-title {
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      margin: 0;
+      color: #ffffff;
+      text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.8);
+      animation: titlePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { 
+        text-shadow: 
+          0 0 20px rgba(255, 255, 255, 0.5),
+          0 4px 8px rgba(0, 0, 0, 0.8);
+      }
+      50% { 
+        text-shadow: 
+          0 0 40px rgba(255, 255, 255, 0.8),
+          0 4px 8px rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    .cake-clickable {
+      font-size: clamp(5rem, 12vw, 10rem);
+      margin: 50px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: cakeFloat 4s ease-in-out infinite;
+      filter: drop-shadow(0 10px 20px rgba(255, 255, 255, 0.2));
+      position: relative;
+    }
+
+    .cake-clickable:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 15px 30px rgba(255, 255, 255, 0.4));
+    }
+
+    @keyframes cakeFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+    }
+
+    .cake-hint {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 10px;
+      font-style: italic;
+      opacity: 0;
+      animation: hintFade 1s ease-out 3s forwards;
+    }
+
+    @keyframes hintFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Side decorative elements - slanted */
+    .side-element {
+      position: absolute;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      opacity: 0.6;
+      animation: sideFloat 6s ease-in-out infinite;
+    }
+
+    .side-element.left {
+      left: 5%;
+      transform: rotate(-15deg);
+    }
+
+    .side-element.right {
+      right: 5%;
+      transform: rotate(15deg);
+    }
+
+    .side-element:nth-child(1) {
+      top: 15%;
+      animation-delay: 0s;
+    }
+
+    .side-element:nth-child(2) {
+      top: 25%;
+      animation-delay: 1s;
+    }
+
+    .side-element:nth-child(3) {
+      top: 35%;
+      animation-delay: 2s;
+    }
+
+    .side-element:nth-child(4) {
+      bottom: 35%;
+      animation-delay: 3s;
+    }
+
+    .side-element:nth-child(5) {
+      bottom: 25%;
+      animation-delay: 4s;
+    }
+
+    .side-element:nth-child(6) {
+      bottom: 15%;
+      animation-delay: 5s;
+    }
+
+    @keyframes sideFloat {
+      0%, 100% { 
+        transform: translateY(0) rotate(var(--rotation));
+        opacity: 0.6;
+      }
+      50% { 
+        transform: translateY(-20px) rotate(var(--rotation));
+        opacity: 0.9;
+      }
+    }
+
+    .notes-btn {
+      padding: 18px 35px;
+      background: transparent;
+      color: #ffffff;
+      border: 3px solid #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: buttonSlide 1s ease-out 4s forwards;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 60px;
+    }
+
+    @keyframes buttonSlide {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notes-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      transition: left 0.3s ease;
+      z-index: 1;
+    }
+
+    .notes-btn span {
+      position: relative;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+
+    .notes-btn:hover::before {
+      left: 0;
+    }
+
+    .notes-btn:hover span {
+      color: #000000;
+    }
+
+    .notes-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Photo modal */
+    .photo-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .photo-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .photo-container {
+      background: #ffffff;
+      padding: 30px;
+      border: 4px solid #000000;
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+      transform: scale(0.8);
+      transition: transform 0.4s ease;
+    }
+
+    .photo-modal.show .photo-container {
+      transform: scale(1);
+    }
+
+    .photo-placeholder {
+      width: 400px;
+      height: 300px;
+      background: #f0f0f0;
+      border: 2px solid #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .photo-caption {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #000000;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #000000;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .upload-btn {
+      background: #000000;
+      color: #ffffff;
+      border: 2px solid #000000;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .side-element {
+        font-size: 2rem;
+      }
+      
+      .photo-placeholder {
+        width: 300px;
+        height: 225px;
+      }
+      
+      .photo-container {
+        padding: 20px;
+        margin: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .side-element {
+        font-size: 1.5rem;
+      }
+      
+      .photo-placeholder {
+        width: 250px;
+        height: 190px;
+      }
+      
+      .notes-btn {
+        padding: 16px 30px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Slanted side decorative elements -->
+  <div class="side-element left" style="--rotation: -15deg;">🎈</div>
+  <div class="side-element right" style="--rotation: 15deg;">✨</div>
+  <div class="side-element left" style="--rotation: -15deg;">🎊</div>
+  <div class="side-element right" style="--rotation: 15deg;">🌟</div>
+  <div class="side-element left" style="--rotation: -15deg;">🎉</div>
+  <div class="side-element right" style="--rotation: 15deg;">💫</div>
+
+  <div class="main-container">
+    <h1 class="birthday-title">Happy Birthday Machaa!!</h1>
+    
+    <div class="cake-clickable" onclick="openPhotoModal()">🎂</div>
+    <p class="cake-hint">Click the cake for a surprise! 🎁</p>
+    
+    <a href="notes.html" class="notes-btn">
+      <span>📝 Special Notes</span>
+    </a>
+  </div>
+
+  <!-- Photo Modal -->
+  <div class="photo-modal" id="photoModal">
+    <div class="photo-container">
+      <button class="close-btn" onclick="closePhotoModal()">&times;</button>
+      <div class="photo-placeholder" id="photoDisplay">
+        <p>🖼️ Your special photo will appear here!</p>
+      </div>
+      <p class="photo-caption">A memory worth celebrating! 📸</p>
+      <!-- <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="displayPhoto(event)">
+      <button class="upload-btn" onclick="document.getElementById('photoInput').click()">
+        Choose Photo 📷
+      </button> -->
+    </div>
+  </div>
+
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="app.js"></script>
+  <script>
+    // Photo modal functions
+    function openPhotoModal() {
+      document.getElementById('photoModal').classList.add('show');
+      loadPhoto();
+    }
+
+    function closePhotoModal() {
+      document.getElementById('photoModal').classList.remove('show');
+    }
+
+    // function displayPhoto(event) {
+    //   const file = event.target.files[0];
+    //   if (file) {
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //       const photoDisplay = document.getElementById('photoDisplay');
+    //       photoDisplay.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid #000;">`;
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    // }
+
+    // Close modal when clicking outside
+    document.getElementById('photoModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePhotoModal();
+      }
+    });
+
+    // Simple sparkle effect on click
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.photo-modal') || e.target.closest('.notes-btn')) return;
+      
+      createSparkle(e.clientX, e.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const sparkles = ['✨', '💫', '⭐'];
+      const sparkle = document.createElement('div');
+      sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.position = 'fixed';
+      sparkle.style.left = (x - 12) + 'px';
+      sparkle.style.top = (y - 12) + 'px';
+      sparkle.style.fontSize = '20px';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.zIndex = '100';
+      sparkle.style.animation = 'sparkleUp 1.5s ease-out forwards';
+      
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => sparkle.remove(), 1500);
+    }
+
+    // Add sparkle animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sparkleUp {
+        0% {
+          transform: scale(0) translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1) translateY(-15px);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(0) translateY(-30px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
