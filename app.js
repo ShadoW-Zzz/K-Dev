@@ -31,16 +31,17 @@ async function checkPassword() {
             
             if (password === correctPassword) {
                 showResult("✅ Access Granted! Redirecting...", "success");
-                currentHintIndex = 0; // reset hints after success
-                document.getElementById("password").value = ""; // clear input
+                currentHintIndex = 0; 
+                sessionStorage.setItem("accessGranted", "true");
+                document.getElementById("password").value = ""; 
                 
-                // Redirect to birthday page after short delay
+                
                 setTimeout(() => {
                     window.location.href = "birthday.html";
                 }, 1500);
             } else {
                 let message = "❌ Access Denied.";
-                
+                document.getElementById("password").value = "";
                 // Show hint if available
                 if (Array.isArray(hints) && currentHintIndex < hints.length) {
                     message += "\n💡 Hint: " + hints[currentHintIndex];

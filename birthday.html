@@ -376,6 +376,12 @@
       }
     }
   </style>
+  <script>
+    if (!sessionStorage.getItem("accessGranted")) {
+      alert("No cheating ra Babu!");
+      window.location.href = "index.html";
+    }
+  </script>
 </head>
 <body>
   <!-- Slanted side decorative elements -->
@@ -404,7 +410,7 @@
       <div class="photo-placeholder" id="photoDisplay">
         <p>🖼️ Your special photo will appear here!</p>
       </div>
-      <p class="photo-caption">A memory worth celebrating! 📸</p>
+      <p class="photo-caption">Happy Birthday Raaawww! 📸</p>
     </div>
   </div>
 
