@@ -330,6 +330,116 @@ function debugPhotoAccess(fileId) {
     });
 }
 
+// export async function loadNotes() {
+//     const notesDiv = document.getElementById("notesContent");
+
+//     try {
+//         const docRef = doc(db, "secrets", "notesDoc");
+//         const docSnap = await getDoc(docRef);
+
+//         if (docSnap.exists()) {
+//             const data = docSnap.data();
+//             const notes = data.notes || [];
+
+//             notesDiv.innerHTML = ""; // clear previous content
+
+//             let accumulatedDelay = 0; // keeps track of total delay so far
+
+//             notes.forEach(line => {
+//                 const p = document.createElement("p");
+//                 p.textContent = line;
+//                 p.style.opacity = 0;
+//                 notesDiv.appendChild(p);
+
+//                 // Estimate time: 80ms per character, minimum 1s per line
+//                 const lineDelay = Math.max(1000, line.length * 80);
+
+//                 setTimeout(() => {
+//                     p.style.transition = "opacity 0.8s ease";
+//                     p.style.opacity = 1;
+//                 }, accumulatedDelay);
+
+//                 accumulatedDelay += lineDelay; // add for next line
+//             });
+//         } else {
+//             notesDiv.innerHTML = "<p>⚠️ Notes not found in database.</p>";
+//         }
+//     } catch (error) {
+//         console.error("Error fetching notes:", error);
+//         notesDiv.innerHTML = "<p>⚠️ Failed to load notes.</p>";
+//     }
+// }
+
+
+let currentIndex = 1; // start from 1
+let totalNotes = 1;
+
+export async function loadNotes() {
+    const notesDiv = document.getElementById("notesContent");
+    const dotsContainer = document.getElementById("dotsContainer");
+
+    try {
+        const docRef = doc(db, "secrets", "notesDoc");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            totalNotes = data.totalNotes || 0;
+
+            // Create dots
+            dotsContainer.innerHTML = "";
+            for (let i = 1; i <= totalNotes; i++) {
+                const dot = document.createElement("div");
+                dot.className = "dot";
+                dot.addEventListener("click", () => showNote(i, data));
+                dotsContainer.appendChild(dot);
+            }
+
+            showNote(currentIndex, data);
+
+            document.getElementById("nextNote").onclick = () => {
+                if (currentIndex < totalNotes) showNote(currentIndex + 1, data);
+            };
+            document.getElementById("prevNote").onclick = () => {
+                if (currentIndex > 1) showNote(currentIndex - 1, data);
+            };
+        } else {
+            notesDiv.innerHTML = "<p>⚠️ Notes not found in database.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching notes:", error);
+        notesDiv.innerHTML = "<p>⚠️ Failed to load notes.</p>";
+    }
+}
+
+function showNote(index, data) {
+    const notesDiv = document.getElementById("notesContent");
+    const dots = document.querySelectorAll(".dot");
+
+    currentIndex = index;
+    notesDiv.innerHTML = "";
+
+    const noteKey = `notes${index}`;
+    const noteParagraphs = data[noteKey] || [];
+
+    noteParagraphs.forEach((para, i) => {
+        const p = document.createElement("p");
+        p.textContent = para;
+        p.style.opacity = 0;
+        notesDiv.appendChild(p);
+
+        // Fade in each paragraph one by one
+        setTimeout(() => p.style.opacity = 1, i * 1600);
+    });
+
+    // Update dots
+    dots.forEach(dot => dot.classList.remove("active"));
+    if (dots[index - 1]) dots[index - 1].classList.add("active");
+}
+
+
+
+
 // Make function globally available
 window.checkPassword = checkPassword;
 window.loadPhoto = loadPhoto;
