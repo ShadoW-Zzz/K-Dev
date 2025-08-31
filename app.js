@@ -422,14 +422,23 @@ function showNote(index, data) {
     const noteKey = `notes${index}`;
     const noteParagraphs = data[noteKey] || [];
 
-    noteParagraphs.forEach((para, i) => {
+    let cumulativeDelay = 0; // keep track of total delay so far
+
+    noteParagraphs.forEach((para) => {
         const p = document.createElement("p");
         p.textContent = para;
         p.style.opacity = 0;
         notesDiv.appendChild(p);
 
-        // Fade in each paragraph one by one
-        setTimeout(() => p.style.opacity = 1, i * 1600);
+        // Compute delay based on length: e.g., 50ms per character + 500ms base
+        const delayForThisPara = para.length * 50 + 300;
+
+        setTimeout(() => {
+            p.style.transition = "opacity 0.8s ease";
+            p.style.opacity = 1;
+        }, cumulativeDelay);
+
+        cumulativeDelay += delayForThisPara; // add for next paragraph
     });
 
     // Update dots
